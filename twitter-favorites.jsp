@@ -175,7 +175,7 @@
                     <form action="twitter-posttweet.jsp" class="posttweet" method="post">
                         <textarea class="tweet-box" placeholder="Compose new Tweet..." id="tweet-box-mini-home-profile" name="tweet_contents"></textarea>
                         <input type="hidden" name="id" value=<%=login_ID%>> </input>
-                        <input type="hidden" name="referer" value="twitter-home.jsp"></input>
+                        <input type="hidden" name="referer" value="twitter-favorites.jsp"></input>
                         <button type="submit" class="btn btn-default">Submit</button>
                     </form>
                 </div>
@@ -540,21 +540,21 @@
                                                    <%if(!num_replies.equals("0")){%> <%=num_replies%><%}%>
                                                 </button>
                                             </a>
-                                            <a href="<%if(already_retweeted!=0||tweeter_ID.equals(login_ID)){%>#<%}else{%>twitter-posttweet.jsp?tweet_contents=<%=tweet_content_raw.replaceAll("#", "!!!hash!!!")%>&retweet_id=<%=tweet_ID%>&referer=twitter-home.jsp<%}%>">
+                                            <a href="<%if(already_retweeted!=0||tweeter_ID.equals(login_ID)){%>#<%}else{%>twitter-posttweet.jsp?tweet_contents=<%=tweet_content_raw.replaceAll("#", "!!!hash!!!")%>&retweet_id=<%=tweet_ID%>&referer=twitter-favorites.jsp<%}%>">
                                                 <button type="button" class="btn btn-xs btn-default<%if(already_retweeted!=0||tweeter_ID.equals(login_ID)){%> disabled<%}%>" style="padding-left: 12px; padding-right: 12px;padding-bottom: 2px;padding-top: 2px;width: 55.81818175315857px;">
                                                     <span class="icon-retweet"></span>
                                                     <%if(!times_retweeted.equals("0")){%> <%=times_retweeted%><%}%>
                                                 </button>
                                             </a>
                                             <a id="popover" data-trigger="hover"> Favorite Tweet
-                                            <a href="twitter-favoritetweet.jsp?tweet_id=<%=tweet_ID%>&referer=twitter-home.jsp">
+                                            <a href="twitter-favoritetweet.jsp?tweet_id=<%=tweet_ID%>&referer=twitter-favorites.jsp">
                                                 <button type="button" class="btn btn-xs btn-default" style="padding-left: 12px; padding-right: 12px;padding-bottom: 2px;padding-top: 2px;width: 55.81818175315857px;">
                                                     <span class="<%if(already_favorited!=0){%>icon-star<%}else{%>icon-star-empty<%}%>"></span>
                                                     <%if(!times_favorited.equals("0")){%> <%=times_favorited%><%}%>
                                                 </button>
                                             </a>
                                             </a>
-                                            <a href="<%if(retweeter_ID.equals(login_ID)){%>twitter-deletetweet.jsp?tweet_id=<%=retweeter_tweet_ID%>&referer=twitter-home.jsp<%}else{%>twitter-togglefollower.jsp?followed_id=<%=retweeter_ID%>&referer=twitter-home.jsp<%}%>">
+                                            <a href="<%if(retweeter_ID.equals(login_ID)){%>twitter-deletetweet.jsp?tweet_id=<%=retweeter_tweet_ID%>&referer=twitter-favorites.jsp<%}else{%>twitter-togglefollower.jsp?followed_id=<%=retweeter_ID%>&referer=twitter-favorites.jsp<%}%>">
                                                 <button type="button" class="btn btn-xs btn-default" style="padding-left: 12px; padding-right: 12px;padding-bottom: 2px;padding-top: 2px;width: 55.81818175315857px;">
                                                     <span class="<%if(retweeter_ID.equals(login_ID)){%>icon-trash<%}else if(timesFollowed.equals("0")){%>icon-eye-open<%}else{%>icon-eye-close<%}%>"></span>
                                                 </button>
@@ -735,7 +735,7 @@
                                 <span>
                                     <form action="twitter-posttweet.jsp" class="posttweet" method="post" style="margin-bottom: 5px;">
                                         <textarea class="tweet-box" placeholder="Compose new Tweet..." id="tweet-box-mini-home-profile" name="tweet_contents" style="height: 20px; margin-bottom: 0px;"><%="@"+tweeter_username+" "%></textarea>
-                                        <input type="hidden" name="referer" value="twitter-home.jsp#<%=tweet_ID%>replies"></input>
+                                        <input type="hidden" name="referer" value="twitter-favorites.jsp#<%=tweet_ID%>replies"></input>
                                         <input type="hidden" name="reply_id" value="<%=tweet_ID%>"></input>
                                         <button type="submit" class="btn btn-default">Submit</button>
                                     </form>
