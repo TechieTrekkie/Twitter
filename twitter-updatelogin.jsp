@@ -5,6 +5,7 @@
 
 <%@ page import="java.io.*" %>
 <%@ page import="java.security.*" %>
+<%@ page import="java.awt.image.BufferedImage" %>
 
 <%@ page import="java.util.regex.Pattern" %>
 <%@ page import="java.util.regex.Matcher" %>
@@ -14,6 +15,15 @@
 <%@ page import="org.apache.commons.codec.binary.DigestUtils.*" %>
 <%@ page import="org.apache.commons.codec.binary.*" %>
 <%@ page import="org.apache.commons.codec.digest.*" %>
+
+<%@ page import="java.lang.Runtime"%>
+<%@ page import="java.lang.Process"%>
+
+<%@ page import="javax.servlet.*" %>
+<%@ page import="javax.servlet.http.*" %>
+<%@ page import="javax.imageio.ImageIO" %>
+
+<%@ page import="com.oreilly.servlet.MultipartRequest" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -39,13 +49,35 @@
         response.sendRedirect("twitter-signin.jsp");
     }
 
-	username = request.getParameter("username").toLowerCase();
-	full_name = request.getParameter("full-name");
-	email = request.getParameter("email");
-	phone = request.getParameter("phone");
-	birth_date = request.getParameter("birth_date");
-	profile_text = request.getParameter("profile_text");
-	avatar=request.getParameter("avatar");
+    ServletContext context = getServletContext();
+	String directory = "";
+	String tile_text_file = "";
+	String name = "";
+	String fn = "";
+
+	MultipartRequest multi = new MultipartRequest(request, context.getRealPath(directory) + "/twitter_dir/images/avatars/uploadTemp", 1500 * 1024 * 1024);
+
+	//MultipartRequest multi = new MultipartRequest(request, context.getRealPath(directory) + "/ups/images", 5 * 1024 * 1024);
+                
+
+	Enumeration files = multi.getFileNames();
+		
+    //while (files.hasMoreElements())
+    //{
+        //name = (String)files.nextElement();
+ 		//fn = multi.getFilesystemName(name);
+		//String dude = multi.getParameter("user");	
+		//out.println(dude);
+	//}
+	File imageFile = multi.getFile("avatar");
+
+	username = multi.getParameter("username").toLowerCase();
+	full_name = multi.getParameter("full-name");
+	email = multi.getParameter("email");
+	phone = multi.getParameter("phone");
+	birth_date = multi.getParameter("birth_date");
+	profile_text = multi.getParameter("profile_text");
+	avatar=multi.getParameter("avatar");
 
 	if(birth_date==null||birth_date.equals(""))
     {
@@ -102,6 +134,12 @@
 		out.println("Username Error");
     	allowProceed=false;
     }
+
+    if(profile_text.length()>140)
+	{
+		out.println("Name Error");
+    	allowProceed=false;
+    }
 	
 	if(full_name.length()==0 || full_name.length()>30)
 	{
@@ -121,58 +159,28 @@
     conn = DriverManager.getConnection(url, userid, DBpassword);      //connect to database
 
 	/**********************************************************************/
-    	/*
+    	///*
 
-    String contentType = request.getContentType();
-out.println("Content type is :: " +contentType);
-//if ((contentType != null) && (contentType.indexOf("multipart/form-data") >= 0)) {
-DataInputStream in = new DataInputStream(request.getInputStream());
-int formDataLength = request.getContentLength();
-out.println(formDataLength);
-byte dataBytes[] = new byte[formDataLength];
-int byteRead = 0;
-int totalBytesRead = 0;
-while (totalBytesRead < formDataLength) {
-byteRead = in.read(dataBytes, totalBytesRead, formDataLength);
-totalBytesRead += byteRead;
-}
+    //ServletContext context = getServletContext();
+	//String directory = "";
+	//String tile_text_file = "";
+    //String name = "";
+	//String fn = "";
 
-String file = new String(dataBytes);
-String saveFile = file.substring(file.indexOf("filename=\"") + 10);
-saveFile = saveFile.substring(0, saveFile.indexOf("\n"));
-saveFile = saveFile.substring(saveFile.lastIndexOf("\\") + 1,saveFile.indexOf("\""));
+	//MultipartRequest multi = new MultipartRequest(request, context.getRealPath(directory) + "/ups/images", 5 * 1024 * 1024);
+                
 
-//out.print(dataBytes);
+	//Enumeration files = multi.getFileNames();
+		
+    //while (files.hasMoreElements())
+    //{
+    //    name = (String)files.nextElement();
+ 	//	fn = multi.getFilesystemName(name);
+	//	String dude = multi.getParameter("user");	
+	//	out.println(dude);
+	//}
 
-int lastIndex = contentType.lastIndexOf("=");
-String boundary = contentType.substring(lastIndex + 1,contentType.length());
-//out.println(boundary);
-int pos;
-pos = file.indexOf("filename=\"");
-
-pos = file.indexOf("\n", pos) + 1;
-
-pos = file.indexOf("\n", pos) + 1;
-
-pos = file.indexOf("\n", pos) + 1;
-
-
-int boundaryLocation = file.indexOf(boundary, pos) - 4;
-int startPos = ((file.substring(0, pos)).getBytes()).length;
-int endPos = ((file.substring(0, boundaryLocation)).getBytes()).length;
-
-FileOutputStream fileOut = new FileOutputStream(saveFile);
-
-
-//fileOut.write(dataBytes);
-fileOut.write(dataBytes, startPos, (endPos - startPos));
-fileOut.flush();
-fileOut.close();
-
-out.println("File saved as " +saveFile);
-
-//}*/
-    	
+		//*/
     	if(allowProceed)
     	{
     		out.println("Success");
@@ -188,13 +196,43 @@ out.println("File saved as " +saveFile);
 			updateLoginPS.setString(6, profile_text); // set input parameter
 			updateLoginPS.setString(7, login_ID); // set input parameter
 			updateLoginPS.executeUpdate();
-			
+
+			if(!(imageFile==null))
+			{
+				String extension = "";
+				int i = imageFile.getName().lastIndexOf('.');
+				if (i > 0)
+				{
+    				extension = imageFile.getName().substring(i+1);
+				}
+	
+				out.println(extension);
+				File newImage=new File(context.getRealPath(directory) + "/twitter_dir/images/avatars/"+login_ID+"."+extension);
+				
+        		if (imageFile.exists())
+        		{
+            		imageFile.renameTo(newImage);
+            		newImage.setReadable(true, false);
+            		if(true)
+            		{
+            			//File jpgNewImage = new File(context.getRealPath(directory) + "/twitter_dir/images/avatars/"+login_ID+".jpg");
+            			BufferedImage img = ImageIO.read(newImage);
+            			int squareMaxLength=Math.min(img.getHeight(), img.getWidth());
+            			img=img.getSubimage((img.getWidth()-squareMaxLength)/2, (img.getHeight()-squareMaxLength)/2, squareMaxLength, squareMaxLength);
+            			ImageIO.write(img, "PNG", new File(context.getRealPath(directory) + "/twitter_dir/images/avatars/"+login_ID+".jpg"));
+            			newImage.delete();
+            			out.println(Arrays.toString(ImageIO.getWriterFormatNames()));
+            			//jpgNewImage.setReadable(true, false);
+            		}
+            	}
+            }
 			response.sendRedirect("twitter-settings.jsp");
 			
     	}
     	else
     	{
     		out.println("FAIL");
+    		response.sendRedirect("twitter-settings.jsp");
     	}
 	    
 %>

@@ -93,32 +93,45 @@
             var phone_error = document.getElementById('phone-error');
             
             var profile_text = document.forms["credentials-form"]["profile_text"].value;
+            var profile_error = document.getElementById('profile-error');
 
             var usernames = document.getElementById('usernames').innerHTML.split(" ");
-            console.log(usernames);
+            //console.log(usernames);
             
             var allowProceed=1;
             
             if(full_name.length==0)
             {
-                console.log('Name BAD');
+                //console.log('Name BAD');
                 full_name_error.style.display = 'block';
                 allowProceed=0;
             }
             else
             {
-                console.log('Name GOOD');
+                //console.log('Name GOOD');
                 full_name_error.style.display = 'none';
+            }
+
+            if(profile_text.length>140)
+            {
+                //console.log('Name BAD');
+                profile_error.style.display = 'block';
+                allowProceed=0;
+            }
+            else
+            {
+                //console.log('Name GOOD');
+                profile_error.style.display = 'none';
             }
             
             if(validateEmail(email))
             {
-                console.log('Email GOOD');
+                //console.log('Email GOOD');
                 email_error.style.display = 'none';
             }
             else
             {
-                console.log('Email BAD');
+                //console.log('Email BAD');
                 email_error.style.display = 'block';
                 allowProceed=0;
             }
@@ -129,7 +142,7 @@
             {
                 if(usernames[i].toLowerCase()===username.toLowerCase())
                 {
-                    console.log('Username Bad');
+                    //console.log('Username Bad');
                     username_error.style.display = 'block';
                     allowProceed=0;
                 }
@@ -139,7 +152,7 @@
             {
                 if(username.charAt(c).toLowerCase() == username.charAt(c).toUpperCase())
                 {
-                    console.log('Username Bad');
+                    //console.log('Username Bad');
                     username_error.style.display = 'block';
                     allowProceed=0;
                 }
@@ -149,14 +162,14 @@
             phoneNumRaw=phoneNumRaw.replace("(", "");
             phoneNumRaw=phoneNumRaw.replace(")", "");
 
-            console.log(phoneNumRaw);
+            //console.log(phoneNumRaw);
 
             phone_error.style.display = 'none';
             for(var c=0; c<phoneNumRaw.length; c++)
             {
                 if(!(phoneNumRaw.charAt(c)<10))
                 {
-                    console.log('Phone Bad');
+                    //console.log('Phone Bad');
                     phone_error.style.display = 'block';
                     allowProceed=0;
                 }
@@ -164,13 +177,13 @@
 
             if(phoneNumRaw.length!=10||phone.charAt(0)!='('||phone.charAt(4)!=')'||phone.charAt(8)!='-')
             {
-                console.log('Phone Bad');
+                //console.log('Phone Bad');
                 phone_error.style.display = 'block';
                 allowProceed=0;
             }
 
-            console.log(profile_text);
-            console.log(allowProceed);
+            //console.log(profile_text);
+            //console.log(allowProceed);
             
             
             if(allowProceed==0)
@@ -248,7 +261,7 @@
                 <div class="module mini-profile">
                     <div class="content">
                         <div class="account-group" style="height: 54px;">
-                            <a href="#">
+                            <a href="twitter-profile.jsp?profile=<%=login_ID%>">
                                 <img class="avatar size64" src='<%="images/avatars/"+login_ID+".jpg"%>' onerror="this.src='images/avatars/default.png'" alt='<%=full_name%>' height="54" width="54">
                                 <b class="fullname"><%=full_name%></b>
                                 <small class="metadata">@<%=username%></small>
@@ -269,7 +282,7 @@
 
                     <!-- all settings -->
                     <div class="stream home-stream">
-                        <form name=credentials-form action="twitter-updatelogin.jsp" enctype="multipart/form-data" class="signin" method="GET" onsubmit="return validateForm();">
+                        <form action="twitter-updatelogin.jsp" ENCTYPE="multipart/form-data" class="signin" method=POST onsubmit="return validateForm();" name=credentials-form id="settings_form">
                             <!-- Full Name -->
                             <div class="js-stream-item stream-item expanding-string-item">
                                 <div class="tweet original-tweet">
@@ -361,7 +374,10 @@
                                             </a>
                                         </div>
                                         <p class="js-tweet-text" style="margin-bottom: 0px;">
-                                            <textarea id="profile_text" class="text-input email-input" placeholder="Profile Text" defaultValue="<%=profile_text%>" value="<%=profile_text%>" name="profile_text" title="Profile Text" autocomplete="on" tabindex="1" type="text" style="height: 80.81818175315857px; width: 260px;" onchange="validateForm()" onkeypress="validateForm()"><%=profile_text%></textarea>
+                                            <textarea id="profile_text" class="text-input email-input" placeholder="Profile Text" defaultValue="<%=profile_text%>" value="<%=profile_text%>" name="profile_text" title="Profile Text" autocomplete="on" tabindex="1" type="text" style="height: 80.81818175315857px; width: 260px;" onchange="validateForm()" onkeypress="validateForm()" form="settings_form"><%=profile_text%></textarea>
+                                        </p>
+                                        <p style="margin-bottom: 0px;">
+                                            <small id="profile-error" class="fullname"><font color="red">Profile Invalid.  Limit 140 Characters.</font></small>
                                         </p>
                                     </div>
                                 </div>

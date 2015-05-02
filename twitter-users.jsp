@@ -173,8 +173,8 @@
                     <div class="js-mini-profile-stats-container">
                         <ul class="stats">
                             <li><a href="twitter-profile.jsp?profile=<%=login_ID%>"><strong><%=numTweets%></strong>Tweets</a></li>
-                            <li><a href="twitter-following.html"><strong><%=numFollowing%></strong>Following</a></li>
-                            <li><a href="#"><strong><%=numFollowers%></strong>Followers</a></li>
+                            <li><a href="twitter-following.jsp?profile=<%=login_ID%>"><strong><%=numFollowing%></strong>Following</a></li>
+                            <li><a href="twitter-followers.jsp?profile=<%=login_ID%>"><strong><%=numFollowers%></strong>Followers</a></li>
                         </ul>
                     </div>
                     <form action="twitter-posttweet.jsp" class="posttweet" method="post">
@@ -255,6 +255,17 @@
                         profile_box_full_name = getAllProfilesRS.getString("full_name");
                         profile_box_profile_text = getAllProfilesRS.getString("profile_text");
 
+                        String[] profileTextArray = profile_box_profile_text.split(" ");
+                        profile_box_profile_text = "";
+                        for(String word : profileTextArray)//Check for hashtags
+                        {
+                            word=word.replaceAll("&", "&amp;");
+                            word=word.replaceAll("<", "&#60;");
+                            word=word.replaceAll(">", "&gt;");
+                            profile_box_profile_text=profile_box_profile_text+" "+word;
+                        }
+                                    
+
                             //Check if already following person tweeting
                             String checkIfFollowedQuery = "SELECT count(*) FROM following_t WHERE followed_ID = ? AND follower_ID = ?;";
                             java.sql.PreparedStatement checkIfFollowedPS = conn.prepareStatement(checkIfFollowedQuery); // create a statement
@@ -271,7 +282,7 @@
                         <div class="module mini-profile">
                             <div class="content">
                                 <div class="account-group" style="height: 65px;">
-                                    <a href="twitter-profile.jsp?profile=<%=login_ID%>">
+                                    <a href="twitter-profile.jsp?profile=<%=profile_box_ID%>">
                                         <img class="avatar size64" src='<%="images/avatars/"+profile_box_ID+".jpg"%>' onerror="this.src='images/avatars/default.png'" alt='<%=profile_box_full_name%>' height="54" width="54">
                                         <b class="fullname"><%=profile_box_full_name%></b>
                                         <small class="metadata">@<%=profile_box_username%></small>

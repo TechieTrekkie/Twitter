@@ -7,6 +7,7 @@
 
 <%
 String login_ID = (String)session.getAttribute("id");
+String success = request.getParameter("success");
 if(login_ID!=null)
 {
 	response.sendRedirect("twitter-home.jsp"); 
@@ -92,6 +93,21 @@ if(login_ID!=null)
   <div class="front-bg">
     <img class="front-image" src="images/jp-mountain@2x.jpg">
   </div>
+
+  <%
+  if(success!=null && success.equals("f"))
+    {
+  %>
+  <div style="margin-top: 10px; position: absolute; top: 40px; left: 50%;">
+    <div class="alert alert-danger" style="position: relative; right: 50%">
+      <button type="button" class="close" data-dismiss="alert">x</button>
+      <strong>Login Information Invalid!</strong> Check you login credentials and try again.
+    </div>
+  </div>
+  <%
+    }
+  %>
+
   <div class="front-card">
     <div class="front-welcome">
       <div class="front-welcome-text">
@@ -99,7 +115,6 @@ if(login_ID!=null)
         <p>Find out what's happening now, the the people and organizations you care about.</p>
       </div>
     </div>
-
     <div class="front-signin">
       <form action="twitter-verifylogin.jsp" class="signin" method="post">
         <div class="placeholding-input username hasone">

@@ -255,8 +255,8 @@
                     <div class="js-mini-profile-stats-container">
                         <ul class="stats">
                             <li><a href="twitter-profile.jsp?profile=<%=login_ID%>"><strong><%=numTweets%></strong>Tweets</a></li>
-                            <li><a href="twitter-following.html"><strong><%=numFollowing%></strong>Following</a></li>
-                            <li><a href="#"><strong><%=numFollowers%></strong>Followers</a></li>
+                            <li><a href="twitter-following.jsp?profile=<%=login_ID%>"><strong><%=numFollowing%></strong>Following</a></li>
+                            <li><a href="twitter-followers.jsp?profile=<%=login_ID%>"><strong><%=numFollowers%></strong>Followers</a></li>
                         </ul>
                     </div>
                     <form action="twitter-posttweet.jsp" class="posttweet" method="post">
@@ -319,6 +319,21 @@
                                 <h1 class="fullname"><%=profile_full_name%></h1>
                                 <h2 class="username">@<%=profile_username%></h2>
                                 <div class="bio-container">
+
+                                    <%
+
+
+
+                                    String[] profileTextArray = profile_text.split(" ");
+                                    profile_text = "";
+                                    for(String word : profileTextArray)//Check for hashtags
+                                    {
+                                        word=word.replaceAll("&", "&amp;");
+                                        word=word.replaceAll("<", "&#60;");
+                                        word=word.replaceAll(">", "&gt;");
+                                        profile_text=profile_text+" "+word;
+                                    }
+                                    %>
                                     <p class="bio profile-field"><%=profile_text%></p>
                                 </div>
                             </div>
@@ -333,13 +348,13 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="js-nav" href="#">
+                                        <a class="js-nav" href="twitter-following.jsp?profile=<%=profile_ID%>">
                                             <strong><%=numProfileFollowing%></strong>
                                             Following
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="js-nav" href="#">
+                                        <a class="js-nav" href="twitter-followers.jsp?profile=<%=profile_ID%>">
                                             <strong><%=numProfileFollowers%></strong>
                                             Followers
                                         </a>

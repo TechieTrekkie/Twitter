@@ -97,6 +97,7 @@
     	//Good
     	out.println("success");
     	session.setAttribute("id", login_ID);
+        session.setMaxInactiveInterval(600);
     	
     	/**********************************************************************/
 
@@ -136,10 +137,6 @@
     }
     else
     {
-    	//Bad Login
-	    out.println("fail");
-	    out.println(salt);
-	    out.println(login_password);
-	    out.println(hashedPass);
+    	response.sendRedirect("twitter-signin.jsp?success=f");
     }
 %>

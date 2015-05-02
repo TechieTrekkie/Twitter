@@ -168,8 +168,8 @@
                     <div class="js-mini-profile-stats-container">
                         <ul class="stats">
                             <li><a href="twitter-profile.jsp?profile=<%=login_ID%>"><strong><%=numTweets%></strong>Tweets</a></li>
-                            <li><a href="twitter-following.html"><strong><%=numFollowing%></strong>Following</a></li>
-                            <li><a href="#"><strong><%=numFollowers%></strong>Followers</a></li>
+                            <li><a href="twitter-following.jsp?profile=<%=login_ID%>"><strong><%=numFollowing%></strong>Following</a></li>
+                            <li><a href="twitter-followers.jsp?profile=<%=login_ID%>"><strong><%=numFollowers%></strong>Followers</a></li>
                         </ul>
                     </div>
                     <form action="twitter-posttweet.jsp" class="posttweet" method="post">
